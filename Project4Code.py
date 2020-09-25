@@ -75,19 +75,21 @@ with open("accesslog.log") as fh:
         
     
 #print the results        
-print()       
+print("-----------------------------------")       
 print("Total requests in the last year: " + str(past_year_requests))
 print("Total requests in entire log: " + str(total_requests))
-print() 
+print("-----------------------------------")
 print("Unsuccessful requests: " + str(unsuccessful_requests))
 print("Redirected requests: " + str(redirected_requests))
-print()
+print("-----------------------------------")
 print("Most requested file: " + str(list(filenames.keys())[0]))
 print("Least requested file: " + str(list(filenames.keys())[-1]))
-print()
+print("-----------------------------------")
+print("Requests per month: ")
+for key, value in months.items():
+    print(str(key) + " - Occurrences: " + str(value))
+print("-----------------------------------")
 print("Requests per day: ")
-for pair in months.items():
-    print(pair)
-print()
-for pair in days.items():
-    print(pair)
+for key, value in days.items():
+    print(str(key) + " - Occurrences: " + str(value))
+print("-----------------------------------")
