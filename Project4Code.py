@@ -2,6 +2,15 @@
 #TCMG 412-500
 #Group Project #3: Using Python
 
+
+# 1. How many requests were made on each day? 
+# 2. How many requests were made on a week-by-week basis? Per month?
+# 3. What percentage of the requests were not successful (any 4xx status code)?
+# 4. What percentage of the requests were redirected elsewhere (any 3xx codes)?
+# 5. What was the most-requested file?
+# 6. What was the least-requested file?
+
+
 from urllib.request import urlretrieve
 from os import path
 import re
@@ -14,7 +23,11 @@ past_year_requests = 0
 unsuccessful_requests = 0
 redirected_requests = 0
 past_year = '/1995'
+days = {}
+months = {}
 filenames = {}
+
+
 
 #check if log file is already downloaded
 if path.exists('accesslog.log') == False:
@@ -24,25 +37,39 @@ if path.exists('accesslog.log') == False:
 
 
 #open the file, read each line, and count each line and date in past year
-fh = open(logfile)
-for line in open(logfile):
-    total_requests += 1
-    fh.readline()
-    if past_year in line:
-        past_year_requests += 1
-    #question 3    
-    if '403 -' in line or '404 -' in line:
-        unsuccessful_requests += 1
-    #question 4    
-    if '302 -' in line:
-        redirected_requests += 1
-    #question 1-2    
-    date = re.split('[:', line)
-    file = date[]
-    if file in filenames:
-        filenames[file] += 1
-    else:
-        filenames[file] = 1
+with open("accesslog.log") as fh:
+    Lines = fh.readlines()
+    for line in Lines:
+        total_requests += 1
+        if past_year in line:
+            past_year_requests += 1
+            #question 3    
+            if '403 -' in line or '404 -' in line:
+                unsuccessful_requests += 1
+                #question 4    
+            if '302 -' in line:
+                redirected_requests += 1
+                #question 1-2    
+        result = re.split('.+ \[(.+) .+\] "[A-Z]{3,5} (.+) HTTP/1.0" ([0-9]{3})', line)
+        if len(result) == 5:
+            date = result[1]
+            file = result[2]
+            code = result[3]
+            
+            date = date.split('/')
+            if date[0] in days:
+                days[date[0]] += 1
+            else:
+                days[date[0]] = 1
+            if date[1] in days:
+                months[date[1]] += 1
+            else:
+                months[date[1]] = 1
+            
+            if file in filenames:
+                filenames[file] += 1
+            else:
+                filenames[file] = 1
             
         
     
@@ -53,3 +80,5 @@ print("Total requests in entire log: " + str(total_requests))
 print() 
 print("Unsuccessful requests: " + str(unsuccessful_requests))
 print("Redirected requests: " + str(redirected_requests))
+print(days)
+print(months)
