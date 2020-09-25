@@ -28,7 +28,6 @@ months = {}
 filenames = {}
 
 
-
 #check if log file is already downloaded
 if path.exists('accesslog.log') == False:
     #parse log file and download to local machine with progress bar
@@ -46,25 +45,27 @@ with open("accesslog.log") as fh:
             #question 3    
             if '403 -' in line or '404 -' in line:
                 unsuccessful_requests += 1
-                #question 4    
+            #question 4    
             if '302 -' in line:
                 redirected_requests += 1
-                #question 1-2    
+        #question 1-2    
         result = re.split('.+ \[(.+) .+\] "[A-Z]{3,5} (.+) HTTP/1.0" ([0-9]{3})', line)
         if len(result) == 5:
             date = result[1]
             file = result[2]
-            code = result[3]
             
-            date = date.split('/')
+            
+            date = date.split(':')
             if date[0] in days:
                 days[date[0]] += 1
             else:
                 days[date[0]] = 1
-            if date[1] in days:
-                months[date[1]] += 1
+                
+            date[0] = date[0].split('/')
+            if date[0][1] + " " + date[0][2] in months:
+                months[date[0][1] + " " + date[0][2]] += 1
             else:
-                months[date[1]] = 1
+                months[date[0][1] + " " + date[0][2]] = 1
             
             if file in filenames:
                 filenames[file] += 1
@@ -80,5 +81,13 @@ print("Total requests in entire log: " + str(total_requests))
 print() 
 print("Unsuccessful requests: " + str(unsuccessful_requests))
 print("Redirected requests: " + str(redirected_requests))
-print(days)
-print(months)
+print()
+print("Most requested file: " + str(list(filenames.keys())[0]))
+print("Least requested file: " + str(list(filenames.keys())[-1]))
+print()
+print("Requests per day: ")
+for pair in months.items():
+    print(pair)
+print()
+for pair in days.items():
+    print(pair)
