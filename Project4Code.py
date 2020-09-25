@@ -95,7 +95,7 @@ print("-----------------------------------")
 print("Most requested file: " + str(list(filenames.keys())[0]))
 print("Least requested file: " + str(list(filenames.keys())[-1]))
 
-# number of requests per month
+# number of requests per month (couldn't figure out weeks)
 print("-----------------------------------")
 print("Requests per month: ")
 for key, value in months.items():
